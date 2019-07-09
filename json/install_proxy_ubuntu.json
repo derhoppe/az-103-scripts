@@ -1,0 +1,3 @@
+{
+    "commandToExecute": "sudo apt-get update && sudo apt-get -y install apache2 && sudo a2enmod proxy && sudo a2enmod proxy_http && sudo a2enmod proxy_balancer && sudo a2enmod lbmethod_byrequests && sudo systemctl restart apache2 && sudo echo '<VirtualHost *:80> \n ProxyPreserveHost On \n ProxyPass / http://10.xxx.0.xxx:80/ \n ProxyPassReverse / http://10.xxx.0.xxx:80/ \n </VirtualHost>' > /etc/apache2/sites-available/000-default.conf && sudo systemctl restart apache2"
+}

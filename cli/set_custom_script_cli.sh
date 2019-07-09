@@ -1,0 +1,1 @@
+az vm extension set --resource-group <<RGNAME>> --vm-name <<VMNAME>> --name customScript --publisher Microsoft.Azure.Extensions --settings <<SCRIPTFILE>>
