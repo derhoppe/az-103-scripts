@@ -71,3 +71,5 @@ function Unzip
 Unzip "C:\inetpub\wwwroot\repo.zip" "C:\inetpub\wwwroot"
 
 Copy-Item C:\inetpub\wwwroot\DemoApplication-master\* -Destination C:\inetpub\wwwroot\ -Recurse -Verbose -Force
+
+rm C:\inetpub\wwwroot\iisstart.*
