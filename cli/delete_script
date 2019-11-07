@@ -1,0 +1,1 @@
+az group list --tag delete=yes --query "[].[name]" -o tsv | xargs -L1 bash -c 'az group delete --name $0 --no-wait --yes'
