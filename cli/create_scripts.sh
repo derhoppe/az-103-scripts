@@ -16,9 +16,9 @@ VNETSPOKEEU_workload_LBIP="10."$MYIDEU".2.100"
 VNETSPOKEUS_workload="10."$MYIDUS".2.0/24"
 VNETSPOKEUS_workload_LBIP="10."$MYIDUS".2.100"
 wget https://raw.githubusercontent.com/derhoppe/az-103-scripts/master/yaml/cloud-init.yaml
-az group create -n RG-AZEUW-COMPUTE-0001-DEV --location westeurope --tags "delete=yes"
+az group create -n RG-AZEUW-COMPUTE-0001-DEV --location eastus --tags "delete=yes"
 az group create -n RG-AZEU1-COMPUTE-0001-DEV --location eastus --tags "delete=yes"
-az group create -n RG-AZEUW-NETWORK-0001-DEV --location westeurope --tags "delete=yes"
+az group create -n RG-AZEUW-NETWORK-0001-DEV --location eastus --tags "delete=yes"
 az group create -n RG-AZEU1-NETWORK-0001-DEV --location eastus --tags "delete=yes"
 NETHUBEUW=$(az network vnet create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-HUB-0001-DEV --address-prefix $VNETHUB --subnet-name internal --subnet-prefix $VNETHUB_internal)
 NETSPOKEEUW=$(az network vnet create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-SPOKE-0001-DEV --address-prefix $VNETSPOKEEU --subnet-name internal --subnet-prefix $VNETSPOKEEU_internal)
@@ -52,16 +52,6 @@ NICAZEU11=$(az network nic create -g RG-AZEU1-COMPUTE-0001-DEV --name NIC-AZEU1-
 NICAZEU1ID1=$(echo $NICAZEU11 | jq .NewNIC.id)
 NICAZEU12=$(az network nic create -g RG-AZEU1-COMPUTE-0001-DEV --name NIC-AZEU1-SRVAZEU10002-DEV --subnet $SUBEU1)
 NICAZEU1ID2=$(echo $NICAZEU12 | jq .NewNIC.id)
-PIPVPN=$(az network public-ip create -g RG-AZEUW-NETWORK-0001-DEV -n PIP-VPNGW-AZEUW-0001-DEV --allocation-method Dynamic)
-PIPVPNID=$(echo $PIPVPN | jq .publicIp.id)
-az network vnet-gateway create -g RG-AZEUW-NETWORK-0001-DEV -n VPNGW-AZEUW-0001-DEV --public-ip-address $(echo $PIPVPNID | sed -e 's/^"//' -e 's/"$//') --vnet $(echo $NETHUB | sed -e 's/^"//' -e 's/"$//') --gateway-type Vpn --sku VpnGw1 --vpn-type RouteBased --address-prefixes 192.168.0.0/24 --client-protocol SSTP
-az network vnet peering create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-HUB-0001-DEV-VNET-AZEUW-SPOKE-0001-DEV --vnet-name VNET-AZEUW-HUB-0001-DEV --remote-vnet VNET-AZEUW-SPOKE-0001-DEV --allow-vnet-access --allow-gateway-transit
-NETSPOKEEU1=$(az network vnet list --query "[?contains(name, 'VNET-AZEU1-SPOKE-0001-DEV')]")
-az network vnet peering create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-HUB-0001-DEV-VNET-AZEU1-SPOKE-0001-DEV --vnet-name VNET-AZEUW-HUB-0001-DEV --remote-vnet $(echo $(echo $NETSPOKEEU1 | jq first.id) | sed -e 's/^"//' -e 's/"$//') --allow-vnet-access --allow-gateway-transit
-NETHUBEUW=$(az network vnet list --query "[?contains(name, 'VNET-AZEUW-HUB-0001-DEV')]")
-NETHUB=$(echo $NETHUBEUW | jq first.id)
-az network vnet peering create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-SPOKE-0001-DEV-VNET-AZEUW-HUB-0001-DEV --vnet-name VNET-AZEUW-SPOKE-0001-DEV --remote-vnet $(echo $NETHUB | sed -e 's/^"//' -e 's/"$//') --allow-vnet-access --use-remote-gateways
-az network vnet peering create -g RG-AZEU1-NETWORK-0001-DEV -n VNET-AZEU1-SPOKE-0001-DEV-VNET-AZEUW-HUB-0001-DEV --vnet-name VNET-AZEU1-SPOKE-0001-DEV --remote-vnet $(echo $NETHUB | sed -e 's/^"//' -e 's/"$//') --allow-vnet-access --use-remote-gateways
 NICAZEUW1=$(az network nic list --query "[?contains(name, 'NIC-AZEUW-SRVAZEUW0001-DEV')]")
 NICAZEUWID1=$(echo $NICAZEUW1 | jq first.id)
 NICAZEUW2=$(az network nic list --query "[?contains(name, 'NIC-AZEUW-SRVAZEUW0002-DEV')]")
@@ -83,7 +73,7 @@ az network nic ip-config update -g RG-AZEUW-COMPUTE-0001-DEV --nic-name NIC-AZEU
 az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10001-DEV -n ipconfig1 --lb-address-pools $(echo $LBEU1 | sed -e 's/^"//' -e 's/"$//')
 az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10002-DEV -n ipconfig1 --lb-address-pools $(echo $LBEU1 | sed -e 's/^"//' -e 's/"$//')
 az extension add -n azure-firewall
-az network firewall create --name AFW-AZEUW-0001-DEV --resource-group RG-AZEUW-NETWORK-0001-DEV --location westeurope
+az network firewall create --name AFW-AZEUW-0001-DEV --resource-group RG-AZEUW-NETWORK-0001-DEV --location eastus
 PIPFW=$(az network public-ip create -g RG-AZEUW-NETWORK-0001-DEV -n PIP-AFW-AZEUW-0001-DEV --allocation-method Static --sku Standard)
 PIPFWID=$(echo $PIPFW | jq .publicIp.id)
 az network firewall ip-config create --firewall-name AFW-AZEUW-0001-DEV --name FEIP --public-ip-address $(echo $PIPFWID | sed -e 's/^"//' -e 's/"$//') --resource-group RG-AZEUW-NETWORK-0001-DEV --vnet-name VNET-AZEUW-HUB-0001-DEV
@@ -112,3 +102,6 @@ az network application-gateway probe create --gateway-name AG-AZEUW-0001-DEV --n
 LBIP1=$(az network lb list --query "[?contains(name, 'LB-AZEUW-WEB-0001-DEV')]" | jq first.frontendIpConfigurations | jq first.privateIpAddress)
 LBIP2=$(az network lb list --query "[?contains(name, 'LB-AZEU1-WEB-0001-DEV')]" | jq first.frontendIpConfigurations | jq first.privateIpAddress)
 az network application-gateway address-pool update -g RG-AZEUW-NETWORK-0001-DEV --gateway-name AG-AZEUW-0001-DEV -n appGatewayBackendPool --servers $(echo $LBIP1 | sed -e 's/^"//' -e 's/"$//') $(echo $LBIP2 | sed -e 's/^"//' -e 's/"$//')
+PIPVPN=$(az network public-ip create -g RG-AZEUW-NETWORK-0001-DEV -n PIP-VPNGW-AZEUW-0001-DEV --allocation-method Dynamic)
+PIPVPNID=$(echo $PIPVPN | jq .publicIp.id)
+az network vnet-gateway create -g RG-AZEUW-NETWORK-0001-DEV -n VPNGW-AZEUW-0001-DEV --public-ip-address $(echo $PIPVPNID | sed -e 's/^"//' -e 's/"$//') --vnet $(echo $NETHUB | sed -e 's/^"//' -e 's/"$//') --gateway-type Vpn --sku VpnGw1 --vpn-type RouteBased --address-prefixes 192.168.0.0/24 --client-protocol SSTP
