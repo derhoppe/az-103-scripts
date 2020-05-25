@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "westeurope"
+    },
+    "networkInterfaceName": {
+      "value": "srvazeuw9876514"
+    },
+    "enableAcceleratedNetworking": {
+      "value": true
+    },
+    "networkSecurityGroupName": {
+      "value": "SRVAZEUW9876-nsg"
+    },
+    "networkSecurityGroupRules": {
+      "value": []
+    },
+    "subnetName": {
+      "value": "default"
+    },
+    "virtualNetworkName": {
+      "value": "COMPUTE-vnet"
+    },
+    "addressPrefixes": {
+      "value": ["10.0.0.0/24"]
+    },
+    "subnets": {
+      "value": [
+        {
+          "name": "default",
+          "properties": {
+            "addressPrefix": "10.0.0.0/24"
+          }
+        }
+      ]
+    },
+    "publicIpAddressName": {
+      "value": "SRVAZEUW9876-ip"
+    },
+    "publicIpAddressType": {
+      "value": "Dynamic"
+    },
+    "publicIpAddressSku": {
+      "value": "Basic"
+    },
+    "virtualMachineName": {
+      "value": "SRVAZEUW9876"
+    },
+    "virtualMachineRG": {
+      "value": "COMPUTE"
+    },
+    "osDiskType": {
+      "value": "Standard_LRS"
+    },
+    "virtualMachineSize": {
+      "value": "Standard_D4s_v3"
+    },
+    "adminUsername": {
+      "value": "sebastian"
+    },
+    "adminPassword": {
+      "value": null
+    },
+    "autoShutdownStatus": {
+      "value": "Enabled"
+    },
+    "autoShutdownTime": {
+      "value": "18:00"
+    },
+    "autoShutdownTimeZone": {
+      "value": "W. Europe Standard Time"
+    },
+    "autoShutdownNotificationStatus": {
+      "value": "Enabled"
+    },
+    "autoShutdownNotificationLocale": {
+      "value": "en"
+    },
+    "autoShutdownNotificationEmail": {
+      "value": "shaz052020@outlook.de"
+    }
+  }
+}
