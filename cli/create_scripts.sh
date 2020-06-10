@@ -16,9 +16,9 @@ VNETSPOKEEU_workload_LBIP="10."$MYIDEU".2.100"
 VNETSPOKEUS_workload="10."$MYIDUS".2.0/24"
 VNETSPOKEUS_workload_LBIP="10."$MYIDUS".2.100"
 wget https://raw.githubusercontent.com/derhoppe/az-103-scripts/master/yaml/cloud-init.yaml
-az group create -n RG-AZEUW-COMPUTE-0001-DEV --location eastus --tags "delete=yes"
+az group create -n RG-AZEUW-COMPUTE-0001-DEV --location westeurope --tags "delete=yes"
 az group create -n RG-AZEU1-COMPUTE-0001-DEV --location eastus --tags "delete=yes"
-az group create -n RG-AZEUW-NETWORK-0001-DEV --location eastus --tags "delete=yes"
+az group create -n RG-AZEUW-NETWORK-0001-DEV --location westeurope --tags "delete=yes"
 az group create -n RG-AZEU1-NETWORK-0001-DEV --location eastus --tags "delete=yes"
 NETHUBEUW=$(az network vnet create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-HUB-0001-DEV --address-prefix $VNETHUB --subnet-name internal --subnet-prefix $VNETHUB_internal)
 NETSPOKEEUW=$(az network vnet create -g RG-AZEUW-NETWORK-0001-DEV -n VNET-AZEUW-SPOKE-0001-DEV --address-prefix $VNETSPOKEEU --subnet-name internal --subnet-prefix $VNETSPOKEEU_internal)
@@ -73,7 +73,7 @@ az network nic ip-config update -g RG-AZEUW-COMPUTE-0001-DEV --nic-name NIC-AZEU
 az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10001-DEV -n ipconfig1 --lb-address-pools $(echo $LBEU1 | sed -e 's/^"//' -e 's/"$//')
 az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10002-DEV -n ipconfig1 --lb-address-pools $(echo $LBEU1 | sed -e 's/^"//' -e 's/"$//')
 az extension add -n azure-firewall
-az network firewall create --name AFW-AZEUW-0001-DEV --resource-group RG-AZEUW-NETWORK-0001-DEV --location eastus
+az network firewall create --name AFW-AZEUW-0001-DEV --resource-group RG-AZEUW-NETWORK-0001-DEV --location westeurope
 PIPFW=$(az network public-ip create -g RG-AZEUW-NETWORK-0001-DEV -n PIP-AFW-AZEUW-0001-DEV --allocation-method Static --sku Standard)
 PIPFWID=$(echo $PIPFW | jq .publicIp.id)
 az network firewall ip-config create --firewall-name AFW-AZEUW-0001-DEV --name FEIP --public-ip-address $(echo $PIPFWID | sed -e 's/^"//' -e 's/"$//') --resource-group RG-AZEUW-NETWORK-0001-DEV --vnet-name VNET-AZEUW-HUB-0001-DEV
