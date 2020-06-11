@@ -97,11 +97,11 @@ az network nsg create --name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --reso
 SUBHUB=$(az network vnet subnet show --resource-group 'RG-AZEUW-NETWORK-0001-DEV' --name management --vnet-name 'VNET-AZEUW-HUB-0001-DEV' --query addressPrefix -o tsv)
 az network nsg rule create --name Deny-all --nsg-name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --priority 2050 --resource-group RG-AZEU1-NETWORK-0001-DEV --access Deny --protocol '*' --source-port-ranges '*' --destination-address-prefixes '*' --destination-port-ranges '*' --direction Inbound --source-address-prefixes '*'
 az network nsg rule create --name Allow-AZLB --nsg-name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --priority 2040 --resource-group RG-AZEU1-NETWORK-0001-DEV --access Allow --protocol '*' --source-port-ranges '*' --destination-address-prefixes '*' --destination-port-ranges '*' --direction Inbound --source-address-prefixes AzureLoadBalancer
-az network nsg rule create --name Allow-80 --nsg-name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --priority 2030 --resource-group RG-AZEU1-NETWORK-0001-DEV --access Allow --protocol '*' --source-port-ranges '*' --destination-asgs ASG-AZEUW-WEB-0001-DEV --destination-port-ranges 80 --direction Inbound --source-address-prefixes VirtualNetwork
+az network nsg rule create --name Allow-80 --nsg-name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --priority 2030 --resource-group RG-AZEU1-NETWORK-0001-DEV --access Allow --protocol '*' --source-port-ranges '*' --destination-asgs ASG-AZEU1-WEB-0001-DEV --destination-port-ranges 80 --direction Inbound --source-address-prefixes VirtualNetwork
 az network nsg rule create --name Allow-management-22 --nsg-name NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload --priority 2020 --resource-group RG-AZEU1-NETWORK-0001-DEV --access Allow --protocol '*' --source-port-ranges '*' --destination-address-prefixes '*' --destination-port-ranges 22 --direction Inbound --source-address-prefixes $SUBHUB
 ASGID=$(az network asg show -g RG-AZEU1-NETWORK-0001-DEV --name ASG-AZEU1-WEB-0001-DEV --query id -o tsv)
-az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEUW0001-DEV -n ipconfig1 --application-security-groups $ASGID
-az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEUW0002-DEV -n ipconfig1 --application-security-groups $ASGID
+az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10001-DEV -n ipconfig1 --application-security-groups $ASGID
+az network nic ip-config update -g RG-AZEU1-COMPUTE-0001-DEV --nic-name NIC-AZEU1-SRVAZEU10002-DEV -n ipconfig1 --application-security-groups $ASGID
 az network vnet subnet update -g RG-AZEU1-NETWORK-0001-DEV -n workload --vnet-name VNET-AZEU1-SPOKE-0001-DEV --network-security-group NSG-AZEU1-VNET-AZEU1-SPOKE-0001-DEV-workload
 NETHUBEUW=$(az network vnet list --query "[?contains(name, 'VNET-AZEUW-HUB-0001-DEV')]")
 NETHUB=$(echo $NETHUBEUW | jq first.id)
